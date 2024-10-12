@@ -1,24 +1,23 @@
-import { Body, Controller, Get, HttpException, Param, Post, Query } from '@nestjs/common';
-
-const tempCharacters: Array<Record<string, any>> = [
-    { "id":"0", "name": "Jon Snow"},
-    { "id":"1", "name": "Cregan Stark"},
-    { "id":"2", "name": "Howland Reed"},
-    { "id":"3", "name": "Alysanne Targaryen"}
-]
+import { Controller, Get, Query } from '@nestjs/common';
+import { CharactersService } from './characters.service';
 
 @Controller('characters')
 export class CharactersController {
-    // To-do: Pagination
+    constructor(private readonly characterService: CharactersService){};
+    
     @Get()
-    getAllCharacters(): Array<Record<string, any>> {
-        return tempCharacters;
+    async getAllCharacters(
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 10,
+        @Query('sort') sortBy: string = 'fullName',
+        @Query('order') order: string = 'asc'
+    ): Promise<Array<Record<string, any>>> {
+        return await this.characterService.getAllCharacters(page, limit, sortBy, order);
     }
 
-    // To-do: Will have different implementation
     @Get('detail')
-    getCharacterById(@Query('id') charId: string = '0'): string {
-        return `This character, ${tempCharacters.find((item) => item.id === charId)?.name || "Jon Snow"}, has had a wild arc in the show!`;
+    async getCharacterById(@Query('id') charId: number): Promise<Record<string, string>>{
+        return await this.characterService.getCharacterById(charId);
     }
 
     // This is just me learning how to code in NestJS, haha

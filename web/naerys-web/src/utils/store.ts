@@ -14,6 +14,14 @@ type CharactersPageStore = {
   setSearch: (reqSearch: string) => void;
 };
 
+type PairingPageStore = {
+  availableCharacter: Array<Record<string, any>>;
+  selectedCharacter: Array<Record<string, string>>;
+
+  setAvailable: (character: Array<Record<string, any>>) => void;
+  setSelected: (character: Array<Record<string, string>>) => void;
+};
+
 export const useCharactersPageStore = create<CharactersPageStore>((set) => ({
   page: 1,
   limit: 10,
@@ -40,4 +48,12 @@ export const useCharactersPageStore = create<CharactersPageStore>((set) => ({
   setSearch: (reqSearch: string) => {
     set({ search: reqSearch });
   },
+}));
+
+export const usePairingPageStore = create<PairingPageStore>((set) => ({
+  availableCharacter: [],
+  selectedCharacter: [],
+
+  setAvailable: (character: Array<Record<string, any>>) => {},
+  setSelected: (character: Array<Record<string, string>>) => {},
 }));

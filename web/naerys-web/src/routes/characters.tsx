@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import Loader from "../components/Loader";
 import { useCharactersPageStore } from "../utils/store";
-import { Pagination, TextInput } from "flowbite-react";
+import { Dropdown, Pagination, TextInput } from "flowbite-react";
+import Error from "../components/Error";
 
 export const Route = createFileRoute("/characters")({
   component: Characters,
@@ -13,15 +14,17 @@ function Characters() {
   const limitNumber = useCharactersPageStore((state) => state.limit);
   const sortType = useCharactersPageStore((state) => state.sort);
   const orderType = useCharactersPageStore((state) => state.order);
+  const searchQuery = useCharactersPageStore((state) => state.search);
   const setPage = useCharactersPageStore((state) => state.setPage);
   const setLimit = useCharactersPageStore((state) => state.setLimit);
   const setSort = useCharactersPageStore((state) => state.setSort);
   const setOrder = useCharactersPageStore((state) => state.setOrder);
+  const setSearch = useCharactersPageStore((state) => state.setSearch);
 
   const {
     isPending,
     isError,
-    data: charData,
+    data: reqData = { totalPages: 1, characters: [] },
     error,
     isFetching,
   } = useQuery({
@@ -35,13 +38,19 @@ function Characters() {
       setSort,
       setOrder,
       setLimit,
+      searchQuery,
+      setSearch,
     ],
     queryFn: async () => {
       const response = await fetch(
-        `http://localhost:3000/characters?page=${pageNumber}&limit=${limitNumber}&sort=${sortType}&order=${orderType}`
+        `http://localhost:3000/characters?page=${pageNumber}&limit=${limitNumber}&sort=${sortType}&order=${orderType}&search=${searchQuery}`
       );
 
-      return response.json();
+      const output = await response.json();
+
+      if (pageNumber > output.totalPages) setPage(1);
+
+      return output;
     },
     placeholderData: keepPreviousData,
   });
@@ -50,14 +59,51 @@ function Characters() {
     return <span>Error: {error.message}</span>;
   }
 
+  console.log(reqData);
+
   return (
     <div className="flex flex-col w-auto h-screen">
-      <div className="flex sm:justify-between mt-2 mx-4 justify-center align-middle items-center">
-        <TextInput id="search" placeholder="Search name..." className="" />
+      <div className="flex sm:justify-between mt-2 mx-4 justify-center align-middle">
+        <TextInput
+          id="search"
+          placeholder="Search name..."
+          value={searchQuery}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <div className="flex gap-4">
+          <Dropdown label="Sort By" dismissOnClick={true}>
+            <Dropdown.Item value="fullName" onClick={() => setSort("fullName")}>
+              Full Name (Default)
+            </Dropdown.Item>
+            <Dropdown.Item
+              value="firstName"
+              onClick={() => setSort("firstName")}
+            >
+              First Name
+            </Dropdown.Item>
+            <Dropdown.Item value="lastName" onClick={() => setSort("lastName")}>
+              Last Name
+            </Dropdown.Item>
+            <Dropdown.Item value="family" onClick={() => setSort("family")}>
+              Family
+            </Dropdown.Item>
+            <Dropdown.Item value="title" onClick={() => setSort("title")}>
+              Title
+            </Dropdown.Item>
+          </Dropdown>
+          <Dropdown label="Order By" dismissOnClick={true}>
+            <Dropdown.Item value="asc" onClick={() => setOrder("asc")}>
+              Ascending (Default)
+            </Dropdown.Item>
+            <Dropdown.Item value="desc" onClick={() => setOrder("desc")}>
+              Descending
+            </Dropdown.Item>
+          </Dropdown>
+        </div>
         <Pagination
           layout="navigation"
           currentPage={pageNumber}
-          totalPages={6}
+          totalPages={reqData.totalPages}
           onPageChange={setPage}
         />
       </div>
@@ -65,9 +111,9 @@ function Characters() {
         <div className="flex justify-center items-center w-full h-full">
           <Loader />
         </div>
-      ) : (
-        <div className="grid grid-cols-3 gap-4 p-4">
-          {charData.map((character: Record<string, any>) => (
+      ) : reqData.characters.length > 0 ? (
+        <div className="grid grid-cols-5 gap-4 p-4">
+          {reqData.characters.map((character: Record<string, any>) => (
             <Link
               to="/peyrie"
               className="group relative block bg-black"
@@ -92,6 +138,8 @@ function Characters() {
             </Link>
           ))}
         </div>
+      ) : (
+        <Error />
       )}
     </div>
   );

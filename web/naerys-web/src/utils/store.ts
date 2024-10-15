@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { CharacterObject, PairingApiRequestBody } from "./constants";
 
 type CharactersPageStore = {
   page: number;
@@ -15,11 +16,16 @@ type CharactersPageStore = {
 };
 
 type PairingPageStore = {
-  availableCharacter: Array<Record<string, any>>;
-  selectedCharacter: Array<Record<string, string>>;
+  referenceCharacters: Array<CharacterObject>;
+  availableCharacters: Array<CharacterObject>;
+  selectedCharacter: Array<CharacterObject>;
+  pairing: Array<PairingApiRequestBody>;
+  maxSelection: number;
 
-  setAvailable: (character: Array<Record<string, any>>) => void;
-  setSelected: (character: Array<Record<string, string>>) => void;
+  setAvailable: (characters: Array<CharacterObject>) => void;
+  setSelected: (character: CharacterObject) => void;
+  setDeselect: (character: CharacterObject) => void;
+  reset: () => void;
 };
 
 export const useCharactersPageStore = create<CharactersPageStore>((set) => ({
@@ -51,9 +57,54 @@ export const useCharactersPageStore = create<CharactersPageStore>((set) => ({
 }));
 
 export const usePairingPageStore = create<PairingPageStore>((set) => ({
-  availableCharacter: [],
+  referenceCharacters: [],
+  availableCharacters: [],
   selectedCharacter: [],
+  pairing: [],
+  maxSelection: 4,
 
-  setAvailable: (character: Array<Record<string, any>>) => {},
-  setSelected: (character: Array<Record<string, string>>) => {},
+  setAvailable: (characters: Array<CharacterObject>) => {
+    set(() => ({
+      referenceCharacters: characters,
+      availableCharacters: characters,
+    }));
+  },
+  setSelected: (character: CharacterObject) => {
+    set((state) => ({
+      selectedCharacter: [...state.selectedCharacter, character],
+      pairing: [...state.pairing, { name: character.fullName }],
+      maxSelection: state.maxSelection - 1,
+      availableCharacters: state.referenceCharacters.filter(
+        (char) =>
+          !state.selectedCharacter.includes(char) && char.id !== character.id
+      ),
+    }));
+  },
+  setDeselect: (character: CharacterObject) => {
+    set((state) => ({
+      availableCharacters: state.referenceCharacters.filter(
+        (char) =>
+          !state.selectedCharacter
+            .filter((selected) => selected.id !== character.id)
+            .map((selected) => selected.id)
+            .includes(char.id)
+      ),
+      maxSelection: state.maxSelection + 1,
+      pairing: state.pairing.filter(
+        (relation) => relation.name !== character.fullName
+      ),
+      selectedCharacter: state.selectedCharacter.filter(
+        (char) => char.id !== character.id
+      ),
+    }));
+  },
+  reset: () => {
+    set(() => ({
+      referenceCharacters: [],
+      availableCharacters: [],
+      selectedCharacter: [],
+      pairing: [],
+      maxSelection: 4,
+    }));
+  },
 }));

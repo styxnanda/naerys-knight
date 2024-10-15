@@ -33,9 +33,14 @@ export class CharactersService {
       },
     );
 
+    const totalItems: number = sortedData.length;
+
+    if (limit > totalItems) {
+      limit = totalItems;
+    }
+
     // Detail of filtered data
-    const totalItems = sortedData.length;
-    const totalPages = Math.ceil(Number(totalItems) / Number(limit));
+    const totalPages: number = Math.ceil(Number(totalItems) / Number(limit));
 
     if (page < 1) {
       throw new BadRequestException('Invalid page request');

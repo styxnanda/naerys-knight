@@ -1,22 +1,34 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { Avatar, Button, Tooltip } from "flowbite-react";
-import { usePairingPageStore } from "../utils/store";
+import { usePairingPageStore } from "../../../utils/store";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import Loader from "../components/Loader";
+import Loader from "../../../components/Loader";
 import { MdDelete } from "react-icons/md";
 import {
   CharacterObject,
   CharactersApiOutput,
   PairingApiOutput,
-} from "../utils/constants";
+} from "../../../utils/constants";
 import { HiOutlineArrowRight } from "react-icons/hi2";
-import LinkClipboard from "../components/LinkClipboard";
+import LinkClipboard from "../../../components/LinkClipboard";
+import Error from "../../../components/Error";
 
-export const Route = createFileRoute("/peyrie")({
-  component: Peyrie,
+export const Route = createFileRoute("/pair/begin/$charId")({
+  loader: async ({ params: { charId } }) => {
+    const character = await fetch(
+      `http://localhost:3000/characters/detail?id=${charId}`
+    );
+    if (!character.ok) throw notFound();
+    return { character };
+  },
+  component: BeginPair,
+  notFoundComponent: () => {
+    return <Error />;
+  },
 });
 
-function Peyrie() {
+function BeginPair() {
+  const { charId } = Route.useParams();
   const maxCount = usePairingPageStore((state) => state.maxSelection);
   const pairing = usePairingPageStore((state) => state.pairing);
   const urlShown = usePairingPageStore((state) => state.urlShown);
@@ -65,6 +77,14 @@ function Peyrie() {
 
       const output: CharactersApiOutput = await response.json();
       setAvailable(output.characters);
+      const selectedChar = output.characters.find(
+        (char) => char.id === Number(charId)
+      );
+
+      if (selectedChar) {
+        setSelected(selectedChar);
+      }
+
       return output;
     },
     refetchOnWindowFocus: false,

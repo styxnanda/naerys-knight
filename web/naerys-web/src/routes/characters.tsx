@@ -4,6 +4,7 @@ import Loader from "../components/Loader";
 import { useCharactersPageStore } from "../utils/store";
 import { Dropdown, Pagination, TextInput } from "flowbite-react";
 import Error from "../components/Error";
+import { CharacterObject } from "../utils/constants";
 
 export const Route = createFileRoute("/characters")({
   component: Characters,
@@ -112,9 +113,9 @@ function Characters() {
         </div>
       ) : reqData.characters.length > 0 ? (
         <div className="grid grid-cols-5 gap-4 p-4">
-          {reqData.characters.map((character: Record<string, any>) => (
+          {reqData.characters.map((character: CharacterObject) => (
             <Link
-              to="/peyrie"
+              to={"/pair/begin/" + character.id}
               className="group relative block bg-black"
               key={character.id}
             >

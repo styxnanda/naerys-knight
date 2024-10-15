@@ -59,8 +59,6 @@ function Characters() {
     return <span>Error: {error.message}</span>;
   }
 
-  console.log(reqData);
-
   return (
     <div className="flex flex-col w-auto h-screen">
       <div className="flex sm:justify-between mt-2 mx-4 justify-center align-middle">

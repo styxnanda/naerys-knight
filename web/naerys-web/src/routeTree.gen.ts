@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as PeyrieImport } from './routes/peyrie'
 import { Route as CharactersImport } from './routes/characters'
 import { Route as IndexImport } from './routes/index'
+import { Route as PairBeginCharIdImport } from './routes/pair/begin/$charId'
 
 // Create/Update Routes
 
@@ -29,6 +30,11 @@ const CharactersRoute = CharactersImport.update({
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PairBeginCharIdRoute = PairBeginCharIdImport.update({
+  path: '/pair/begin/$charId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -57,6 +63,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PeyrieImport
       parentRoute: typeof rootRoute
     }
+    '/pair/begin/$charId': {
+      id: '/pair/begin/$charId'
+      path: '/pair/begin/$charId'
+      fullPath: '/pair/begin/$charId'
+      preLoaderRoute: typeof PairBeginCharIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -66,12 +79,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/characters': typeof CharactersRoute
   '/peyrie': typeof PeyrieRoute
+  '/pair/begin/$charId': typeof PairBeginCharIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/characters': typeof CharactersRoute
   '/peyrie': typeof PeyrieRoute
+  '/pair/begin/$charId': typeof PairBeginCharIdRoute
 }
 
 export interface FileRoutesById {
@@ -79,14 +94,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/characters': typeof CharactersRoute
   '/peyrie': typeof PeyrieRoute
+  '/pair/begin/$charId': typeof PairBeginCharIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/characters' | '/peyrie'
+  fullPaths: '/' | '/characters' | '/peyrie' | '/pair/begin/$charId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/characters' | '/peyrie'
-  id: '__root__' | '/' | '/characters' | '/peyrie'
+  to: '/' | '/characters' | '/peyrie' | '/pair/begin/$charId'
+  id: '__root__' | '/' | '/characters' | '/peyrie' | '/pair/begin/$charId'
   fileRoutesById: FileRoutesById
 }
 
@@ -94,12 +110,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CharactersRoute: typeof CharactersRoute
   PeyrieRoute: typeof PeyrieRoute
+  PairBeginCharIdRoute: typeof PairBeginCharIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CharactersRoute: CharactersRoute,
   PeyrieRoute: PeyrieRoute,
+  PairBeginCharIdRoute: PairBeginCharIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -116,7 +134,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/characters",
-        "/peyrie"
+        "/peyrie",
+        "/pair/begin/$charId"
       ]
     },
     "/": {
@@ -127,6 +146,9 @@ export const routeTree = rootRoute
     },
     "/peyrie": {
       "filePath": "peyrie.tsx"
+    },
+    "/pair/begin/$charId": {
+      "filePath": "pair/begin/$charId.tsx"
     }
   }
 }

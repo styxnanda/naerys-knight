@@ -19,6 +19,8 @@ export const Route = createFileRoute("/peyrie")({
 function Peyrie() {
   const maxCount = usePairingPageStore((state) => state.maxSelection);
   const pairing = usePairingPageStore((state) => state.pairing);
+  const urlShown = usePairingPageStore((state) => state.urlShown);
+  const setUrlShown = usePairingPageStore((state) => state.setUrlShown);
   const charactersAvailable = usePairingPageStore(
     (state) => state.availableCharacters
   );
@@ -39,6 +41,8 @@ function Peyrie() {
       });
 
       const result: PairingApiOutput = await response.json();
+      setUrlShown(result.pairing_url);
+
       return result.pairing_url;
     },
     onSuccess: (data) => {
@@ -63,6 +67,7 @@ function Peyrie() {
       setAvailable(output.characters);
       return output;
     },
+    refetchOnWindowFocus: false,
   });
 
   if (isError) {
@@ -103,9 +108,10 @@ function Peyrie() {
             ""
           )}
         </div>
-        <div className="flex flex-row justify-center align-middle mt-7">
+        <div className="flex flex-row justify-center align-middle mt-7 gap-5">
           <Button
             gradientDuoTone="redToYellow"
+            className="items-center"
             onClick={() => {
               mutate();
             }}
@@ -113,7 +119,7 @@ function Peyrie() {
             Generate Link
             <HiOutlineArrowRight className="ml-2 h-5 w-5" />
           </Button>
-          <LinkClipboard urlString={pairRequestOutput || "undefined"} />
+          <LinkClipboard urlString={urlShown || ""} />
         </div>
         <span className="relative flex justify-center mt-4">
           <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>

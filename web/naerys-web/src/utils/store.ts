@@ -20,11 +20,13 @@ type PairingPageStore = {
   availableCharacters: Array<CharacterObject>;
   selectedCharacter: Array<CharacterObject>;
   pairing: Array<PairingApiRequestBody>;
+  urlShown: string;
   maxSelection: number;
 
   setAvailable: (characters: Array<CharacterObject>) => void;
   setSelected: (character: CharacterObject) => void;
   setDeselect: (character: CharacterObject) => void;
+  setUrlShown: (urlString?: string) => void;
   reset: () => void;
 };
 
@@ -61,6 +63,7 @@ export const usePairingPageStore = create<PairingPageStore>((set) => ({
   availableCharacters: [],
   selectedCharacter: [],
   pairing: [],
+  urlShown: "",
   maxSelection: 4,
 
   setAvailable: (characters: Array<CharacterObject>) => {
@@ -78,6 +81,7 @@ export const usePairingPageStore = create<PairingPageStore>((set) => ({
         (char) =>
           !state.selectedCharacter.includes(char) && char.id !== character.id
       ),
+      urlShown: "",
     }));
   },
   setDeselect: (character: CharacterObject) => {
@@ -96,6 +100,12 @@ export const usePairingPageStore = create<PairingPageStore>((set) => ({
       selectedCharacter: state.selectedCharacter.filter(
         (char) => char.id !== character.id
       ),
+      urlShown: "",
+    }));
+  },
+  setUrlShown: (urlString?: string) => {
+    set(() => ({
+      urlShown: urlString || "",
     }));
   },
   reset: () => {
@@ -104,6 +114,7 @@ export const usePairingPageStore = create<PairingPageStore>((set) => ({
       availableCharacters: [],
       selectedCharacter: [],
       pairing: [],
+      urlShown: "",
       maxSelection: 4,
     }));
   },

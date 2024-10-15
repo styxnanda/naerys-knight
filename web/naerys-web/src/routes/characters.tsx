@@ -53,6 +53,7 @@ function Characters() {
       return output;
     },
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
   });
 
   if (isError) {

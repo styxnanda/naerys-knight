@@ -8,6 +8,11 @@ export default {
       backgroundImage: {
         "main-bg-image": "url('/src/assets/ASOIAF-Houses.jpg')",
       },
+      fontFamily: {
+        "cormorand-garamond": ["Cormorant Garamond", "Poppins", "sans-serif"],
+        "patua-one": ["Patua One", "Poppins", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
+      },
     },
   },
   plugins: [flowbite.plugin()],

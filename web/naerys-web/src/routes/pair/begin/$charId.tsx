@@ -16,7 +16,7 @@ import Error from "../../../components/Error";
 export const Route = createFileRoute("/pair/begin/$charId")({
   loader: async ({ params: { charId } }) => {
     const character = await fetch(
-      `http://localhost:3000/characters/detail?id=${charId}`
+      `https://api-naga.vercel.app/characters/detail?id=${charId}`
     );
     if (!character.ok) throw notFound();
     return { character };
@@ -46,11 +46,14 @@ function BeginPair() {
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      const response = await fetch("http://localhost:3000/pairing/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(pairing),
-      });
+      const response = await fetch(
+        "https://api-naga.vercel.app/pairing/search",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(pairing),
+        }
+      );
 
       const result: PairingApiOutput = await response.json();
       setUrlShown(result.pairing_url);
@@ -67,7 +70,7 @@ function BeginPair() {
     queryFn: async () => {
       resetStates();
       const response = await fetch(
-        `http://localhost:3000/characters?limit=${100}`,
+        `https://api-naga.vercel.app/characters?limit=${100}`,
         {
           headers: {
             accept: "application/json",

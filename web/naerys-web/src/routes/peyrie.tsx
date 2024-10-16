@@ -35,7 +35,7 @@ function Peyrie() {
   const { mutate } = useMutation({
     mutationFn: async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/pairing/search`,
+        `https://api-naga.vercel.app/pairing/search`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -58,7 +58,7 @@ function Peyrie() {
     queryFn: async () => {
       resetStates();
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/characters?limit=${100}`,
+        `https://api-naga.vercel.app/characters?limit=${100}`,
         {
           headers: {
             accept: "application/json",

@@ -44,7 +44,7 @@ function Characters() {
     ],
     queryFn: async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/characters?page=${pageNumber}&limit=${limitNumber}&sort=${sortType}&order=${orderType}&search=${searchQuery}`
+        `https://api-naga.vercel.app/characters?page=${pageNumber}&limit=${limitNumber}&sort=${sortType}&order=${orderType}&search=${searchQuery}`
       );
 
       const output = await response.json();

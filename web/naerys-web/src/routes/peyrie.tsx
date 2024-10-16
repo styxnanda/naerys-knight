@@ -34,11 +34,14 @@ function Peyrie() {
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      const response = await fetch("http://localhost:3000/pairing/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(pairing),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/pairing/search`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(pairing),
+        }
+      );
 
       const result: PairingApiOutput = await response.json();
       setUrlShown(result.pairing_url);
@@ -55,7 +58,7 @@ function Peyrie() {
     queryFn: async () => {
       resetStates();
       const response = await fetch(
-        `http://localhost:3000/characters?limit=${100}`,
+        `${import.meta.env.VITE_BACKEND_URL}/characters?limit=${100}`,
         {
           headers: {
             accept: "application/json",

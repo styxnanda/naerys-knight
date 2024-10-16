@@ -12,7 +12,7 @@ export class CharactersService {
     order: string,
     search: string,
   ): Promise<{ totalPages: number; characters: Array<Record<string, any>> }> {
-    const url = `https://thronesapi.com/api/v2/Characters`;
+    const url = process.env.THRONESAPI_CHARACTER_URL;
     let data = await this.configService.apiRequestGet(url);
 
     // Search character(s)
@@ -62,7 +62,7 @@ export class CharactersService {
   }
 
   async getCharacterById(id: number): Promise<Record<string, string>> {
-    const url = `https://thronesapi.com/api/v2/Characters/${id}`;
+    const url = `${process.env.THRONESAPI_CHARACTER_URL}/${id}`;
     const headers = {
       accept: 'application/json',
     };

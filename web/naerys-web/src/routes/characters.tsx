@@ -63,7 +63,7 @@ function Characters() {
 
   return (
     <div className="flex flex-col w-auto h-screen">
-      <div className="flex sm:justify-between mt-2 mx-4 justify-center align-middle">
+      <div className="flex sm:justify-between mt-2 mx-4 justify-center align-middle items-center">
         <TextInput
           id="search"
           placeholder="Search name..."
@@ -99,6 +99,20 @@ function Characters() {
               Descending
             </Dropdown.Item>
           </Dropdown>
+          <Dropdown label="Limit Results" dismissOnClick={true}>
+            <Dropdown.Item value={10} onClick={() => setLimit(10)}>
+              10 (Default)
+            </Dropdown.Item>
+            <Dropdown.Item value={20} onClick={() => setLimit(20)}>
+              20
+            </Dropdown.Item>
+            <Dropdown.Item value={30} onClick={() => setLimit(30)}>
+              30
+            </Dropdown.Item>
+            <Dropdown.Item value={100} onClick={() => setLimit(100)}>
+              No Limit
+            </Dropdown.Item>
+          </Dropdown>
         </div>
         <Pagination
           layout="navigation"
@@ -128,7 +142,7 @@ function Characters() {
                 <p className="text-sm font-medium uppercase tracking-widest text-violet-200">
                   {character.title}
                 </p>
-                <p className="text-xl font-bold text-white sm:text-2xl">
+                <p className="text-xl font-bold font-poppinss text-white sm:text-2xl">
                   {character.fullName}
                 </p>
                 <div className="mt-32 sm:mt-48 lg:mt-64">

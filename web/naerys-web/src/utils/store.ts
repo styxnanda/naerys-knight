@@ -13,6 +13,7 @@ type CharactersPageStore = {
   setSort: (reqSort: string) => void;
   setOrder: (reqOrder: string) => void;
   setSearch: (reqSearch: string) => void;
+  reset: () => void;
 };
 
 type PairingPageStore = {
@@ -28,6 +29,12 @@ type PairingPageStore = {
   setDeselect: (character: CharacterObject) => void;
   setUrlShown: (urlString?: string) => void;
   reset: () => void;
+};
+
+type ModalStore = {
+  faqPopup: boolean;
+
+  toggleFaqPopup: () => void;
 };
 
 export const useCharactersPageStore = create<CharactersPageStore>((set) => ({
@@ -55,6 +62,16 @@ export const useCharactersPageStore = create<CharactersPageStore>((set) => ({
 
   setSearch: (reqSearch: string) => {
     set({ search: reqSearch });
+  },
+
+  reset: () => {
+    set({
+      page: 1,
+      limit: 10,
+      sort: "fullName",
+      order: "asc",
+      search: "",
+    });
   },
 }));
 
@@ -116,6 +133,16 @@ export const usePairingPageStore = create<PairingPageStore>((set) => ({
       pairing: [],
       urlShown: "",
       maxSelection: 4,
+    }));
+  },
+}));
+
+export const useModalStore = create<ModalStore>((set) => ({
+  faqPopup: false,
+
+  toggleFaqPopup: () => {
+    set((state) => ({
+      faqPopup: !state.faqPopup,
     }));
   },
 }));

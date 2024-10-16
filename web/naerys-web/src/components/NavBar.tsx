@@ -7,7 +7,6 @@ const NavBar = () => {
   const faqPopup = useModalStore((state) => state.faqPopup);
   const toggleFaqPopup = useModalStore((state) => state.toggleFaqPopup);
 
-  console.log(faqPopup);
   return (
     <div className="p-4 flex bg-white text-black justify-between font-poppins sticky top-0 z-50 items-center border border-t-0 border-l-0 border-r-0 border-b-1 border-gray-300">
       <Link to="/" className="[&.active]:font-bold px-3">
